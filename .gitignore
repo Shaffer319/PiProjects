@@ -101,5 +101,5 @@ ENV/
 .mypy_cache/
 
 #vim
-.swo
-.swp
+*.swo
+*.swp
