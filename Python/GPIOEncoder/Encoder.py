@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 
 class Encoder(object):
     def __init__(self, pin_a, pin_b):

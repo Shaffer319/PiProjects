@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from . import Encoder
+from Encoder import Encoder
 import time
 
 
