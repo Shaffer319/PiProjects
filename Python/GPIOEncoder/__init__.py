@@ -1,1 +1,1 @@
-from GPIOEncoder import Encoder
+from GPIOEncoder.Encoder import Encoder

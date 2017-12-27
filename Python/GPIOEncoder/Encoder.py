@@ -2,6 +2,10 @@ import RPi.GPIO as GPIO
 
 class Encoder(object):
     def __init__(self, pin_a, pin_b):
+    
+        if GPIO.getmode() is None:
+            GPIO.setmode(GPIO.BOARD)
+            
         self.pin_a = pin_a
         self.pin_b = pin_b
 
