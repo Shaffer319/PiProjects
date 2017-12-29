@@ -1,6 +1,6 @@
-# import RPi.GPIO as GPIO
-
-class GPIO(object):
+import RPi.GPIO as GPIO
+"""
+ class GPIO(object):
     HIGH = 1
     LOW = 0
     IN = 0
@@ -24,15 +24,18 @@ class GPIO(object):
     @staticmethod
     def add_event_detect(pin, mode, callback):
         pass
-        
+""" 
 class Encoder(object):
     def __init__(self, pin_a, pin_b):
         self.ticks = 0
+        
         self.last_change = 0
-
+        self.noneTicks = 0
+        self.invalidTicks = 0
         self.no_change = 0
         self.a = 0
         self.b = 0
+        
         self.setup= False
         if GPIO.getmode() is None:
             GPIO.setmode(GPIO.BOARD)
@@ -53,8 +56,8 @@ class Encoder(object):
         #b = self.b
         if not self.setup:
             self.setup = True
-            a = GPIO.input(self.pin_a)is GPIO.HIGH
-            b = GPIO.input(self.pin_b)is GPIO.HIGH
+            self.a = GPIO.input(self.pin_a)
+            self.b = GPIO.input(self.pin_b)
             return
 
         if(channel == self.pin_a):
@@ -62,22 +65,23 @@ class Encoder(object):
             if self.a is not self.b:
                 # Right
                 self.ticks += 1
-                print("RIGHT")
+                # print("RIGHT")
             else:
                 # Left
                 self.ticks -= 1
-                print("LEFT")
+                # print("LEFT")
         else:
             self.b = not self.b
             if self.b is self.a:
                 # Right
                 self.ticks += 1
-                print("RIGHT")
+                # print("RIGHT")
             else:
                 # Left
                 self.ticks -= 1
-                print("LEFT")
-        print("{},a:{},b:{}".format(self.ticks, self.a, self.b))
+                # print("LEFT")
+        # print("{},a:{},b:{}".format(self.ticks, self.a, self.b))
+        self.noneTicks +=1
 
     def change_and_poll(self, channel):
         a = GPIO.input(self.pin_a)
@@ -85,35 +89,41 @@ class Encoder(object):
         
         c = a << 1 | b
         d = self.a << 1 | self.b
-               
-        if d == 0b00 and c == 0b11 or 
-            d == 0b01 and c == 0b10 or
-            d == 0b10 and c == 0b01 or 
+        self.a = a
+        self.b = b
+        if d == 0b00 and c == 0b11 or \
+            d == 0b01 and c == 0b10 or\
+            d == 0b10 and c == 0b01 or \
             d == 0b11 and c == 0b00:
-            print("Invalid state change")
+            self.invalidTicks += 1
+            # print("Invalid state change: prev{}, cur{} ".format(d, c))
             return;
             
-        if d == 0b00 and c == 0b10 or 
-            d == 0b01 and c == 0b00 or
-            d == 0b10 and c == 0b11 or 
+        if d == 0b00 and c == 0b10 or \
+            d == 0b01 and c == 0b00 or\
+            d == 0b10 and c == 0b11 or \
             d == 0b11 and c == 0b01:
-            print("Right")
+            self.ticks+= 1
+            # print("Right")
             return;
             
-        if d == 0b00 and c == 0b01 or 
-            d == 0b01 and c == 0b11 or
-            d == 0b10 and c == 0b00 or 
+        if d == 0b00 and c == 0b01 or \
+            d == 0b01 and c == 0b11 or\
+            d == 0b10 and c == 0b00 or \
             d == 0b11 and c == 0b10:
-            print("Left")
+            self.ticks -= 1
+            # print("Left")
             return;
             
-        if d == 0b00 and c == 0b00 or 
-            d == 0b01 and c == 0b01 or
-            d == 0b10 and c == 0b10 or 
+        if d == 0b00 and c == 0b00 or \
+            d == 0b01 and c == 0b01 or\
+            d == 0b10 and c == 0b10 or \
             d == 0b11 and c == 0b11:            
-            print("None")
+            self.noneTicks += 1
+            # print("None")
             return;
-            
+
+        # If a cases is not handled    
         print("Woops")
         
     def pin_change(self, channel):

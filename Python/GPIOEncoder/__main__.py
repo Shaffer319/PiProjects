@@ -14,7 +14,8 @@ def main():
         encoder = Encoder(11,13)
         # GPIO.setup([15,16], GPIO.OUT)
         while(True):
-            time.sleep(1)
+            print("Ticks:{}, None Bounces{}, Invalids{}".format(encoder.ticks, encoder.noneTicks, encoder.invalidTicks))
+            time.sleep(0.1)
         # for i in range(0, 10):
         #    time.sleep(1)
         for i in range(0, 1000): #while(True):

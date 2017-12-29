@@ -1,16 +1,28 @@
+#include <stdio.h>
 #include <wiringPi.h>
-int led_pin = 22;
+
+int led_pin_red = 22;
+int led_pin_green = 23;
 int main(void)
 {
-    wiringPiSetup();
-    pinMode(led_pin, OUTPUT);
+	printf("Starting blink\r\n");
+	
+	if(wiringPiSetupGpio() == -1)
+		return -1;
+		
+    pinMode(led_pin_red, OUTPUT);
+		
+    pinMode(led_pin_green, OUTPUT);
     
     for(;;)
     {
-        digitalWrite(led_pin, HIGH);
+		printf("On\r\n");
+        digitalWrite(led_pin_red, HIGH);
+        digitalWrite(led_pin_green, LOW);
         delay(500);
-    
-        digitalWrite(led_pin, LOW);
+        printf("Off\r\n");
+        digitalWrite(led_pin_red, LOW);
+        digitalWrite(led_pin_green, HIGH);
         delay(500);
     }
     
