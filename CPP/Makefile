@@ -1,9 +1,10 @@
 
-blink: main.o
-    g++ main.o -o blink
+bin/blink: main.o
+	g++ main.o -o bin/blink -lwiringPi
     
 main.o: main.cpp
-    g++ -c main.cpp
+	g++ -c main.cpp -lwiringPi
     
 clean:
-    rm *.o blink
+	rm -r bin/
+	rm *.o
